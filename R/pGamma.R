@@ -225,17 +225,14 @@ pP0_ratio = function(p0_new, p0_old, alpha0p, p0o, Gammavec_new, Gammavec_old) {
 Gamma_prop = function(GAMMA, k) {
   Gamma = GAMMA[k, ]
   sors = sample(c(0, 1), 1)
-  if (sors == 0 & length(which(Gamma == 1)) > 8) {
+  if (sors == 0) {
     ones = which(GAMMA[k, ] == 1)
     zeros = which(GAMMA[k, ] == 0)
     Gamma[sample(ones, 1)] = 0
     Gamma[sample(zeros, 1)] = 1
-  } else if (sors == 1 & length(which(Gamma == 1)) > 8) {
+  } else if (sors == 1) {
     c1 = sample(1:length(Gamma), 1)
     Gamma[c1] = 1 - Gamma[c1]
-  } else if (length(which(Gamma == 1)) <= 8) {
-    zeros = which(GAMMA[k, ] == 0)
-    Gamma[sample(zeros, 1)] = 1
   }
 
   GAMMA[k, ] = Gamma
@@ -291,20 +288,33 @@ sigma_prop = function(sigma, GAMMA, X, Y, tau, nu0, sigma0) {
 }
 
 
-Yk_prop = function(Y, Yobs, X, GAMMA, tau, nu0, sigma0, k) {
+Yk_prop = function(Y, Yobs, X, GAMMA, tau, k) {
   Xk = X[[k]]
-  Yk = Y[[k]]
+  Yk = as.numeric(Y[[k]])
   yobs = Yobs[[k]]
   gamma = which(GAMMA[k, ] == 1)
   Sigma_gamma = tau[k] * Xk[, gamma] %*% t(Xk[, gamma])
   diag(Sigma_gamma) = diag(Sigma_gamma) + 1
-  Sigma_gamma = sigma0 * Sigma_gamma
-  ll = rep(0, nrow(Sigma_gamma))
-  ll[yobs == 0] = -Inf
-  uu = rep(0, nrow(Sigma_gamma))
-  uu[yobs == 1] = Inf
-  Yk = rtmvt(1, mean = rep(0, nrow(Sigma_gamma)), sigma = Sigma_gamma,
-             df = nu0, lower = ll, upper = uu, algorithm = "gibbs")
+  nfolds = 5
+  index = createFolds(1:length(Yk), nfolds, list = FALSE)
+
+  for (fold in 1:nfolds) {
+    ind = which(index == fold)
+    Sigma11 = Sigma_gamma[-ind, ]
+    Sigma11 = Sigma11[, -ind]
+    Sigma21 = Sigma_gamma[ind, ]
+    Sigma21 = Sigma21[, -ind]
+    Sigma12 = Sigma_gamma[, ind]
+    Sigma12 = Sigma12[-ind, ]
+    invSigma11 = solve(Sigma11)
+    mu21 = Sigma21 %*% invSigma11 %*% Yk[-ind]
+    Sigma221 = Sigma_gamma[ind, ind] - Sigma21 %*% invSigma11 %*% Sigma12
+    ll = rep(-Inf, length(ind)); ll[yobs[ind] == 1] = 0
+    uu = rep(0, length(ind)); uu[yobs[ind] == 1] = Inf
+    Yk[ind] = rtmvnorm(1, mean = as.numeric(mu21), sigma = Sigma221,
+                       lower = ll, upper = uu, algorithm = "gibbs")
+  }
+
   Y[[k]] = as.numeric(Yk)
   return(Y)
 }
