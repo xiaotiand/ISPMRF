@@ -1,7 +1,7 @@
 # ISPMRF
-A Bayesian variable selection framework
+A Bayesian genomic selection framework incorporating prior feature ordering and population structure
 
-An R package for a Bayesian variable selection framework. The framework includes interdependent selection prior and Markov random fields prior.
+An R package for a Bayesian variable selection framework. The framework includes interdependent selection prior (ISP) and Markov random fields prior (MRF).
 
 The package can be installed by running:
 
@@ -15,6 +15,13 @@ Then run
 
 to get an example.
 
+Also, to make a prediction, see
+
+> ?Predict
+
+for more information.
+
+
 Citations:
 
-To be added
+Dai,X., Lu,X., & Chekouo,T. (2023). A Bayesian genomic selection framework incorporating prior feature ordering and population structure with application to coronary artery disease. Statistical Methods in Medical Research, In Press
