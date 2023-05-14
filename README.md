@@ -24,4 +24,4 @@ for more information.
 
 Citations:
 
-Dai,X., Lu,X., & Chekouo,T. (2023). A Bayesian genomic selection framework incorporating prior feature ordering and population structure with application to coronary artery disease. Statistical Methods in Medical Research, In Press
+Dai, X., Lu, X., & Chekouo, T. (2023). A Bayesian genomic selection framework incorporating prior feature ordering and population structure with application to coronary artery disease. Statistical Methods in Medical Research, In Press
