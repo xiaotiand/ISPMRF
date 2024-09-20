@@ -24,4 +24,4 @@ for more information.
 
 Citations:
 
-Dai, X., Lu, X., & Chekouo, T. (2023). A Bayesian genomic selection approach incorporating prior feature ordering and population structures with application to coronary artery disease. Statistical Methods in Medical Research, In Press. DOI: 10.1177/09622802231181231
+Dai, X., Lu, X., & Chekouo, T. (2023). A Bayesian genomic selection approach incorporating prior feature ordering and population structures with application to coronary artery disease. Statistical Methods in Medical Research. DOI: 10.1177/09622802231181231
